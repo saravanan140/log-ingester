@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log Query Interface</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 20px;
+      background-color: #f8f8f8;
+    }
+
+    h1, h2 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #555;
+    }
+
+    input, button {
+      margin-bottom: 10px;
+      padding: 8px;
+      font-size: 14px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    hr {
+      margin-top: 30px;
+      margin-bottom: 30px;
+      border: 0;
+      border-top: 1px solid #ddd;
+    }
+
+    #logResults, #cliLogResults {
+      background-color: white;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    pre {
+      white-space: pre-wrap;
+      margin: 0;
+    }
+
+    /* CLI Section */
+    #cliSearchTerm {
+      width: 100%;
+      padding: 8px;
+      font-size: 14px;
+    }
+
+    #cliLogResults {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    label, input {
+      margin-right: 10px;
+    }
+
+    #startDate, #endDate {
+      width: 150px;
+    }
+
+    button, #searchLogsCLI {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover, #searchLogsCLI:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>Log Query Interface</h1>
+
+  <!-- Web UI Section -->
+  <label for="searchTerm">Search Term (Web UI):</label>
+  <input type="text" id="searchTerm">
+  <button onclick="searchLogs()">Search</button>
+  <div id="logResults"></div>
+
+  <hr>
+
+  <h2>Advanced Features</h2>
+  <label for="startDate">Start Date:</label>
+  <input type="date" id="startDate">
+  <label for="endDate">End Date:</label>
+  <input type="date" id="endDate">
+  <button onclick="searchLogsAdvanced()">Search (Advanced)</button>
+  <div id="logResultsAdvanced"></div>
+
+  <!-- CLI Section -->
+  <h2>Command-Line Interface (CLI)</h2>
+  <p>Enter a search term below to query logs:</p>
+  <input type="text" id="cliSearchTerm" oninput="searchLogsCLI()">
+  <pre id="cliLogResults"></pre>
+
+  <script>
+    function searchLogs() {
+      const searchTerm = document.getElementById('searchTerm').value;
+      fetch(`/search?term=${searchTerm}`)
+        .then(response => response.json())
+        .then(data => {
+          const logResults = document.getElementById('logResults');
+          logResults.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function searchLogsCLI() {
+      const cliSearchTerm = document.getElementById('cliSearchTerm').value;
+      fetch(`/search?term=${cliSearchTerm}`)
+        .then(response => response.json())
+        .then(data => {
+          const cliLogResults = document.getElementById('cliLogResults');
+          cliLogResults.textContent = JSON.stringify(data, null, 2);
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function searchLogsAdvanced() {
+      const searchTerm = document.getElementById('searchTerm').value;
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+
+      const url = `/search?term=${searchTerm}&startDate=${startDate}&endDate=${endDate}`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const logResults = document.getElementById('logResultsAdvanced');
+          logResults.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+        })
+        .catch(error => console.error('Error:', error));
+    }
+  </script>
+</body>
+</html>
