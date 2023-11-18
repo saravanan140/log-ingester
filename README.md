@@ -70,3 +70,18 @@ The Log Ingestor is implemented using Node.js. See the [index.js](index.js) file
 ### Query Interface (HTML/JS)
 
 The Query Interface is implemented using HTML and JavaScript. See the [public/index.html](public/index.html) file for the client-side code.
+
+
+## Usage
+
+### Clone the repository:
+
+  - git clone https://github.com/saravanan140/log-ingester.git
+
+#### Install dependencies:
+  - cd log-ingester
+  - npm install
+
+#### Run the Log Ingestor:
+  - node index.js
+
